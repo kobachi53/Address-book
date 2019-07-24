@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <v-toolbar app>
-      <v-toolbar-side-icon @click="toggleSideMenu"></v-toolbar-side-icon>
-      <v-toolbar-title class="headline text-uppercase">マイアドレス帳</v-toolbar-title>
+      <v-toolbar-side-icon @click.stop="toggleSideMenu"></v-toolbar-side-icon>
+      <v-toolbar-title class="headline text-uppercase">
+        <span>マイアドレス帳</span>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
     <SideNav />
@@ -14,7 +16,7 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import firebase from "firebase";
 import SideNav from "./components/SideNav";
 import { mapActions } from "vuex";
 
@@ -23,13 +25,19 @@ export default {
   components: {
     SideNav
   },
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setLoginUser(user);
+      }
+    });
+  },
   data() {
     return {
       //
     };
   },
   methods: {
-    //actionのメソッド呼び出し
     ...mapActions(["toggleSideMenu"])
   }
 };
